@@ -13,46 +13,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.resolvers = void 0;
-const axios_1 = __importDefault(require("axios"));
 const db_1 = require("../clients/db");
-const jwt_1 = __importDefault(require("../../services/jwt"));
+const user_1 = __importDefault(require("../../services/user"));
 const queries = {
     verifyGoogleToken: (parent_1, _a) => __awaiter(void 0, [parent_1, _a], void 0, function* (parent, { token }) {
-        const googleToken = token;
-        const googleOauthURL = new URL('https://oauth2.googleapis.com/tokeninfo');
-        googleOauthURL.searchParams.set('id_token', googleToken);
-        const { data } = yield axios_1.default.get(googleOauthURL.toString(), {
-            responseType: "json"
-        });
-        const user = yield db_1.prismaClient.user.findUnique({
-            where: { email: data.email },
-        });
-        //not registered yet
-        if (!user) {
-            yield db_1.prismaClient.user.create({
-                data: {
-                    email: data.email,
-                    firstName: data.given_name,
-                    lastName: data.family_name,
-                    profileImageURL: data.picture,
-                },
-            });
-        }
-        //loggedinuser
-        const userInDb = yield db_1.prismaClient.user.findUnique({
-            where: { email: data.email },
-        });
-        if (!userInDb)
-            throw new Error("User with email not found");
-        const userToken = jwt_1.default.generateTokenForUser(userInDb);
-        return userToken;
+        const resultToken = yield user_1.default.verifyGoogleAuthToken(token);
+        return resultToken;
     }),
     getCurrentUser: (parent, args, ctx) => __awaiter(void 0, void 0, void 0, function* () {
         var _b;
         const id = (_b = ctx.user) === null || _b === void 0 ? void 0 : _b.id;
-        const user = yield db_1.prismaClient.user.findUnique({ where: { id } });
+        if (!id)
+            return null;
+        const user = yield user_1.default.getUserById(id);
         return user;
-    })
+    }),
+    getUserById: (parent_2, _c, ctx_1) => __awaiter(void 0, [parent_2, _c, ctx_1], void 0, function* (parent, { id }, ctx) { return user_1.default.getUserById(id); })
 };
 const extraResolvers = {
     User: {
