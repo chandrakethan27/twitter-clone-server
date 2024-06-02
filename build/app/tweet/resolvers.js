@@ -15,8 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.resolvers = void 0;
 const client_s3_1 = require("@aws-sdk/client-s3");
 const s3_request_presigner_1 = require("@aws-sdk/s3-request-presigner");
-const user_1 = __importDefault(require("../../services/user"));
 const tweet_1 = __importDefault(require("../../services/tweet"));
+const user_1 = __importDefault(require("../../services/user"));
 const s3Client = new client_s3_1.S3Client({
     region: process.env.AWS_DEFAULT_REGION
 });

@@ -23,6 +23,7 @@ export async function initServer(){
 
             type Mutation {
                 ${Tweet.mutations}
+                ${User.mutations}
             }
         `,
         resolvers: {
@@ -31,10 +32,11 @@ export async function initServer(){
                 ...Tweet.resolvers.queries      
             },
             Mutation:{
-                ...Tweet.resolvers.mutations
+                ...Tweet.resolvers.mutations,
+                ...User.resolvers.mutations
             },
-            ...Tweet.resolvers.extraResolvers,
-            ...User.resolvers.extraResolvers
+                ...Tweet.resolvers.extraResolvers,
+                ...User.resolvers.extraResolvers
         },
     })
     await graphqlServer.start();

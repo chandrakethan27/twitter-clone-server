@@ -3,8 +3,8 @@ import { prismaClient } from "../clients/db";
 import { Tweet } from "@prisma/client";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import UserService from "../../services/user";
 import TweetService, { CreateTweetPayload } from "../../services/tweet";
+import UserService from "../../services/user";
 
 const s3Client = new S3Client({
     region: process.env.AWS_DEFAULT_REGION
